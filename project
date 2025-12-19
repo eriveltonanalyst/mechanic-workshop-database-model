@@ -1,0 +1,182 @@
+# Oficina Mecânica – Esquema Conceitual de Banco de Dados
+
+## 📌 Descrição do Projeto
+Este projeto tem como objetivo a construção de um **esquema conceitual de banco de dados (DER)** para um sistema de **controle e gerenciamento de ordens de serviço (OS)** em uma oficina mecânica.
+
+O modelo foi desenvolvido a partir de uma narrativa de negócio fornecida pela DIO, identificando entidades, atributos e relacionamentos necessários para representar corretamente o funcionamento da oficina.
+
+---
+
+## 🎯 Objetivo
+Criar um modelo conceitual capaz de:
+- Controlar clientes e seus veículos
+- Gerenciar ordens de serviço
+- Registrar serviços executados e peças utilizadas
+- Calcular valores com base em tabela de mão de obra
+- Controlar equipes e mecânicos
+- Registrar autorização do cliente para execução dos serviços
+
+---
+
+## 🧠 Narrativa de Negócio
+Clientes levam veículos à oficina mecânica para consertos ou revisões periódicas.  
+Cada veículo é designado a uma equipe de mecânicos que identifica os serviços a serem executados e preenche uma ordem de serviço (OS) com data de entrega.  
+
+A partir da OS:
+- Calcula-se o valor de cada serviço com base em uma tabela de referência de mão de obra
+- O valor das peças também compõe o valor total da OS
+- O cliente autoriza a execução dos serviços
+- A mesma equipe avalia e executa os serviços
+
+Os mecânicos possuem código, nome, endereço e especialidade.  
+Cada OS possui número, data de emissão, valor total, status e data de conclusão.
+
+---
+
+## 🗂️ Entidades e Atributos
+
+### 🔹 CLIENTE
+Representa os clientes da oficina.
+
+**Atributos:**
+- id_cliente (PK)
+- nome
+- telefone
+- email
+- endereco
+
+---
+
+### 🔹 VEICULO
+Veículos pertencentes aos clientes.
+
+**Atributos:**
+- id_veiculo (PK)
+- placa
+- modelo
+- marca
+- ano
+- id_cliente (FK)
+
+**Relacionamento:**
+- Cliente (1) —— (N) Veículo
+
+---
+
+### 🔹 EQUIPE
+Equipe responsável pela avaliação e execução dos serviços.
+
+**Atributos:**
+- id_equipe (PK)
+- nome_equipe
+
+---
+
+### 🔹 MECANICO
+Mecânicos que compõem uma equipe.
+
+**Atributos:**
+- id_mecanico (PK)
+- codigo
+- nome
+- endereco
+- especialidade
+- id_equipe (FK)
+
+**Relacionamento:**
+- Equipe (1) —— (N) Mecânico
+
+---
+
+### 🔹 ORDEM_DE_SERVICO (OS)
+Registro central do sistema.
+
+**Atributos:**
+- id_os (PK)
+- numero_os
+- data_emissao
+- data_conclusao
+- status
+- valor_total
+- id_veiculo (FK)
+- id_equipe (FK)
+
+**Relacionamentos:**
+- Veículo (1) —— (N) Ordem de Serviço
+- Equipe (1) —— (N) Ordem de Serviço
+
+---
+
+### 🔹 SERVICO
+Serviços executados durante a ordem de serviço.
+
+**Atributos:**
+- id_servico (PK)
+- descricao
+- valor_mao_obra
+
+---
+
+### 🔹 TABELA_MAO_DE_OBRA
+Tabela de referência para cálculo dos serviços.
+
+**Atributos:**
+- id_tabela (PK)
+- descricao_servico
+- valor_referencia
+
+---
+
+### 🔹 PECA
+Peças utilizadas na execução dos serviços.
+
+**Atributos:**
+- id_peca (PK)
+- descricao
+- valor_unitario
+
+---
+
+### 🔹 AUTORIZACAO
+Autorização do cliente para execução dos serviços.
+
+**Atributos:**
+- id_autorizacao (PK)
+- data_autorizacao
+- status_autorizacao
+- id_os (FK)
+
+---
+
+## 🔗 Entidades Associativas
+
+### 🔸 OS_SERVICO
+Relaciona ordens de serviço aos serviços executados.
+
+**Atributos:**
+- id_os (FK)
+- id_servico (FK)
+- quantidade
+- valor_servico
+
+**Relacionamento:**
+- Ordem de Serviço (N) —— (N) Serviço
+
+---
+
+### 🔸 OS_PECA
+Relaciona ordens de serviço às peças utilizadas.
+
+**Atributos:**
+- id_os (FK)
+- id_peca (FK)
+- quantidade
+- valor_peca
+
+**Relacionamento:**
+- Ordem de Serviço (N) —— (N) Peça
+
+---
+
+## 📐 Visão Geral do Modelo Conceitual
+
